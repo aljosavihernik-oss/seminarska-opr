@@ -58,7 +58,7 @@ namespace class1
 
         ~Sejem()
         {
-            Console.WriteLine("Sejem odstranjen.");
+            Console.WriteLine("Sejem odstranjen!");
         }
     }
 }
