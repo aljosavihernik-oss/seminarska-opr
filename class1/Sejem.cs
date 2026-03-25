@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace class1
 {
-    public class Sejem : Dogodek
+    public class Sejem : Dogodek, IUpravljanje
     {
         public int SteviloStojnic { get; }
         public int ZasedenostHale { get; }
@@ -27,10 +27,37 @@ namespace class1
             for (int i = 0; i < stojnice.Length; i++)
                 stojnice[i] = ObremenitevNaStojnico;
         }
+
         public int this[int index]
         {
             get { return stojnice[index]; }
             set { stojnice[index] = value; }
+        }
+
+        public void Dodaj()
+        {
+            for (int i = 0; i < stojnice.Length; i++)
+            {
+                if (stojnice[i] == 0)
+                {
+                    stojnice[i] = ObremenitevNaStojnico;
+                    return;
+                }
+            }
+        }
+
+        public void Odstrani(int index)
+        {
+            if (index >= 0 && index < stojnice.Length)
+                stojnice[index] = 0;
+        }
+
+        public int SteviloElementov()
+        {
+            int count = 0;
+            foreach (var s in stojnice)
+                if (s != 0) count++;
+            return count;
         }
 
         public override string Opis()
@@ -53,12 +80,9 @@ namespace class1
 
         public override int ObremenitevHale()
         {
-            return SkupnaObremenitev();
-        }
-
-        ~Sejem()
-        {
-            Console.WriteLine("Sejem odstranjen!");
+            int obremenitev = SkupnaObremenitev();
+            PreveriObremenitev(100);
+            return obremenitev;
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static class1.Vmesniki;
+
 
 namespace class1
 {
@@ -16,6 +16,9 @@ namespace class1
         public DateTime Konec { get; }
 
         public static int StevecDogodkov = 0;
+
+        public delegate void ObremenitevHandler(string sporocilo);
+        public event ObremenitevHandler OnPreobremenitev;
 
         protected Dogodek(string naziv, string hala,
                           DateTime zacetek, DateTime konec)
@@ -39,22 +42,39 @@ namespace class1
                    zacetek.AddDays(trajanjeVDneh - 1))
         { }
 
-        public static bool operator ==(Dogodek a, Dogodek b)
+        protected void PreveriObremenitev(int max)
         {
-            if (ReferenceEquals(a, b)) return true;
-            if (a is null || b is null) return false;
-            return a.naziv == b.naziv;
+            if (ObremenitevHale() > max)
+            {
+                OnPreobremenitev?.Invoke("Pozor: hala je preobremenjena!");
+            }
         }
 
-        public static bool operator !=(Dogodek a, Dogodek b)
+        public bool JePreobremenjeno(int max)
         {
-            return !(a == b);
+            return ObremenitevHale() > max;
+        }
+
+        public int RezervaDoMeje(int max)
+        {
+            return max - ObremenitevHale();
+        }
+
+        public virtual string PodrobenOpis()
+        {
+            return ToString() + ", trajanje: " + Trajanje() + " dni.";
+        }
+
+        public bool JeAktiven()
+        {
+            DateTime danes = DateTime.Today;
+            return danes >= Zacetek && danes <= Konec;
         }
 
         public abstract string Opis();
-        public abstract int ObremenitevHale();
         public abstract string KratekOpis();
         public abstract int SkupnaObremenitev();
+        public abstract int ObremenitevHale();
 
         public int Trajanje()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace class1
 {
-    public class Razstava : Dogodek
+    public class Razstava : Dogodek, IUpravljanje
     {
         public readonly int SteviloEksponatov;
         public bool PosebniPogoji { get; }
@@ -24,20 +24,37 @@ namespace class1
             PosebniPogoji = posebniPogoji;
             eksponati = new Eksponat[steviloEksponatov];
         }
+
         public Eksponat this[int index]
         {
             get { return eksponati[index]; }
             set { eksponati[index] = value; }
         }
 
-        public override string Opis()
+        public void Dodaj()
         {
-            return "Razstava s " + SteviloEksponatov + " eksponati.";
+            for (int i = 0; i < eksponati.Length; i++)
+            {
+                if (eksponati[i] == null)
+                {
+                    eksponati[i] = new Slika("Privzeta slika", 5);
+                    return;
+                }
+            }
         }
 
-        public override string KratekOpis()
+        public void Odstrani(int index)
         {
-            return "Razstava: " + SteviloEksponatov + " eksponatov";
+            if (index >= 0 && index < eksponati.Length)
+                eksponati[index] = null;
+        }
+
+        public int SteviloElementov()
+        {
+            int count = 0;
+            foreach (var e in eksponati)
+                if (e != null) count++;
+            return count;
         }
 
         public override int SkupnaObremenitev()
@@ -56,11 +73,19 @@ namespace class1
 
         public override int ObremenitevHale()
         {
-            return SkupnaObremenitev();
+            int obremenitev = SkupnaObremenitev();
+            PreveriObremenitev(100);
+            return obremenitev;
         }
-        ~Razstava()
+
+        public override string Opis()
         {
-            Console.WriteLine("Razstava odstranjena.");
+            return "Razstava s " + SteviloEksponatov + " eksponati.";
+        }
+
+        public override string KratekOpis()
+        {
+            return "Razstava: " + SteviloEksponatov + " eksponatov";
         }
     }
 }

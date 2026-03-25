@@ -14,7 +14,7 @@ namespace class1
 
         public override int Obremenitev()
         {
-            return 2;
+            return Povrsina;
         }
     }
 }

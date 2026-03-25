@@ -6,16 +6,25 @@ using System.Threading.Tasks;
 
 namespace class1
 {
-    internal class Vmesniki
+    public interface IOpisi
     {
-        public interface IOpisi
-        {
-            string KratekOpis();
-        }
+        string KratekOpis();
+        string Opis();
+        string PodrobenOpis();
+    }
 
-        public interface IObremenitev
-        {
-            int SkupnaObremenitev();
-        }
+    public interface IObremenitev
+    {
+        int SkupnaObremenitev();
+        int ObremenitevHale();
+        bool JePreobremenjeno(int max);
+        int RezervaDoMeje(int max);
+    }
+
+    public interface IUpravljanje
+    {
+        void Dodaj();
+        void Odstrani(int index);
+        int SteviloElementov();
     }
 }
