@@ -12,9 +12,6 @@ namespace class1
             : base(naziv, povrsina)
         { }
 
-        public override int Obremenitev()
-        {
-            return Povrsina;
-        }
+        public override int Obremenitev() => Povrsina;
     }
 }

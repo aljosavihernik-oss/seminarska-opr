@@ -11,7 +11,8 @@ namespace class1
         public int SteviloUporabnikov { get; private set; }
         public bool Aktiven { get; private set; } = true;
 
-        public event Action<string> OnUporaba;
+        public delegate void UporabaHandler(string msg);
+        public event UporabaHandler OnUporaba;
 
         public InteraktivniEksponat(string naziv, int povrsina)
             : base(naziv, povrsina)
@@ -19,16 +20,10 @@ namespace class1
 
         public void Uporabi()
         {
-            if (!Aktiven)
-                return;
+            if (!Aktiven) return;
 
             SteviloUporabnikov++;
-            OnUporaba?.Invoke("Eksponat '" + Naziv + "' uporabljen!");
-        }
-
-        public void Izklopi()
-        {
-            Aktiven = false;
+            OnUporaba?.Invoke($"Uporaba: {Naziv}");
         }
 
         public override int Obremenitev()

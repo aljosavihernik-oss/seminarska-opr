@@ -21,7 +21,7 @@ namespace class1
 
         public virtual string Opis()
         {
-            return Naziv + ", površina: " + Povrsina;
+            return $"{Naziv}, povrsina: {Povrsina}";
         }
     }
 }

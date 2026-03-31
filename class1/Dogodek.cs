@@ -15,39 +15,63 @@ namespace class1
         public DateTime Zacetek { get; }
         public DateTime Konec { get; }
 
+        public TimeSpan ZacetekUra { get; }
+        public TimeSpan KonecUra { get; }
+
         public static int StevecDogodkov = 0;
 
-        public delegate void ObremenitevHandler(string sporocilo);
-        public event ObremenitevHandler OnPreobremenitev;
+        public delegate void DogodekHandler(string msg);
+
+        public event DogodekHandler OnPreobremenitev;
+        public event DogodekHandler OnElementDodan;
+        public event DogodekHandler OnElementOdstranjen;
+        public event DogodekHandler OnZapolnitevSpremenjena;
+
+        public List<ProgramDogodka> Program { get; } = new List<ProgramDogodka>();
 
         protected Dogodek(string naziv, string hala,
-                          DateTime zacetek, DateTime konec)
+            DateTime zacetek, DateTime konec,
+            TimeSpan zacetekUra, TimeSpan konecUra)
         {
             this.naziv = naziv;
             this.hala = hala;
             Zacetek = zacetek;
             Konec = konec;
+            ZacetekUra = zacetekUra;
+            KonecUra = konecUra;
+
             StevecDogodkov++;
         }
 
-        protected Dogodek(string naziv)
-            : this(naziv, "Neznana",
-                   DateTime.Today, DateTime.Today)
-        { }
+        protected void SproziDodajanje(string msg)
+        {
+            OnElementDodan?.Invoke(msg);
+        }
 
-        protected Dogodek(string naziv, string hala,
-                          DateTime zacetek, int trajanjeVDneh)
-            : this(naziv, hala,
-                   zacetek,
-                   zacetek.AddDays(trajanjeVDneh - 1))
-        { }
+        protected void SproziOdstranitev(string msg)
+        {
+            OnElementOdstranjen?.Invoke(msg);
+        }
+
+        protected void SproziZapolnitev()
+        {
+            OnZapolnitevSpremenjena?.Invoke("Zapolnitev spremenjena");
+        }
+
+        protected void SproziZapolnitev(string msg)
+        {
+            OnZapolnitevSpremenjena?.Invoke(msg);
+        }
+
+        protected void SproziPreobremenitev(string msg)
+        {
+            OnPreobremenitev?.Invoke(msg);
+        }
 
         protected void PreveriObremenitev(int max)
         {
             if (ObremenitevHale() > max)
-            {
-                OnPreobremenitev?.Invoke("Pozor: hala je preobremenjena!");
-            }
+                SproziPreobremenitev("Hala je preobremenjena!");
         }
 
         public bool JePreobremenjeno(int max)
@@ -60,32 +84,19 @@ namespace class1
             return max - ObremenitevHale();
         }
 
-        public virtual string PodrobenOpis()
-        {
-            return ToString() + ", trajanje: " + Trajanje() + " dni.";
-        }
-
-        public bool JeAktiven()
-        {
-            DateTime danes = DateTime.Today;
-            return danes >= Zacetek && danes <= Konec;
-        }
-
         public abstract string Opis();
         public abstract string KratekOpis();
         public abstract int SkupnaObremenitev();
         public abstract int ObremenitevHale();
 
-        public int Trajanje()
-        {
-            return (Konec - Zacetek).Days + 1;
-        }
-
         public override string ToString()
         {
-            return naziv + " (hala " + hala + "), od " +
-                   Zacetek.ToString("dd.MM.yyyy") + " do " +
-                   Konec.ToString("dd.MM.yyyy");
+            return $"{naziv} ({hala}) {Zacetek:dd.MM} - {Konec:dd.MM}";
+        }
+
+        public virtual string PodrobenOpis()
+        {
+            return ToString();
         }
     }
 }

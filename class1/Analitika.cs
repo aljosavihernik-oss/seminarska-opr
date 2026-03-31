@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace class1
+{
+    public static class Analitika
+    {
+        public static double Povprecje(List<Dogodek> d)
+        {
+            return d.Average(x => x.ObremenitevHale());
+        }
+    }
+}
