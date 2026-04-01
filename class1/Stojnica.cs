@@ -6,21 +6,20 @@ using System.Threading.Tasks;
 
 namespace class1
 {
-    public class ProgramDogodka
+    public class Stojnica
     {
         public string Naziv { get; set; }
-        public TimeSpan Od { get; set; }
-        public TimeSpan Do { get; set; }
-        public ProgramDogodka(string naziv, TimeSpan odCas, TimeSpan doCas)
+        public int Obremenitev { get; set; }
+
+        public Stojnica(string naziv, int obremenitev)
         {
             Naziv = naziv;
-            Od = odCas;
-            Do = doCas;
+            Obremenitev = obremenitev;
         }
 
         public override string ToString()
         {
-            return $"{Naziv} ({Od:hh\\:mm} - {Do:hh\\:mm})";
+            return Naziv;
         }
     }
 }

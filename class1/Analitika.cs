@@ -8,9 +8,23 @@ namespace class1
 {
     public static class Analitika
     {
-        public static double Povprecje(List<Dogodek> d)
+        public static int Skupna(List<Dogodek> dogodki)
         {
-            return d.Average(x => x.ObremenitevHale());
+            int vsota = 0;
+
+            foreach (var d in dogodki)
+            {
+                vsota += d.ObremenitevHale();
+            }
+
+            return vsota;
+        }
+
+        public static double Povprecje(List<Dogodek> dogodki)
+        {
+            if (dogodki.Count == 0) return 0;
+
+            return (double)Skupna(dogodki) / dogodki.Count;
         }
     }
 }

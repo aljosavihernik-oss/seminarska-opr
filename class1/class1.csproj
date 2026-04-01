@@ -52,6 +52,7 @@
     <Compile Include="Sejem.cs" />
     <Compile Include="Sejmisce.cs" />
     <Compile Include="Slika.cs" />
+    <Compile Include="Stojnica.cs" />
     <Compile Include="Vmesniki.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

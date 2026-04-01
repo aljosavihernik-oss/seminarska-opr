@@ -8,76 +8,93 @@ namespace class1
 {
     public class Sejem : Dogodek, IUpravljanje
     {
-        private int[] stojnice;
-        public const int ObremenitevNaStojnico = 3;
+        public int SteviloStojnic { get; }
+
+        private Stojnica[] stojnice;
 
         public Sejem(string naziv, string hala,
-            DateTime zacetek, int trajanje,
-            int st, int zased)
-            : base(naziv, hala, zacetek, zacetek.AddDays(trajanje),
-                  TimeSpan.Zero, TimeSpan.Zero)
+            DateTime zacetek, int trajanjeVDneh,
+            int steviloStojnic, int zasedenostHale)
+            : base(
+                naziv,
+                hala,
+                zacetek,
+                zacetek.AddDays(trajanjeVDneh - 1), 
+                TimeSpan.Zero,                
+                TimeSpan.Zero                    
+            )
         {
-            stojnice = new int[st];
+            SteviloStojnic = steviloStojnic;
+            stojnice = new Stojnica[steviloStojnic];
         }
-        public void Dodaj()
+        public void DodajStojnico(Stojnica s)
         {
             for (int i = 0; i < stojnice.Length; i++)
             {
-                if (stojnice[i] == 0)
+                if (stojnice[i] == null)
                 {
-                    stojnice[i] = ObremenitevNaStojnico;
+                    stojnice[i] = s;
 
-                    SproziDodajanje("Dodana stojnica");
+                    SproziDodajanje("Dodana stojnica: " + s.Naziv);
                     SproziZapolnitev();
-                    PreveriObremenitev(100);
+                    if (SkupnaObremenitev() > 100)
+                        SproziPreobremenitev("Hala je preobremenjena!");
 
                     return;
                 }
             }
-            SproziPreobremenitev("Sejem je poln!");
-        }
-        public void Odstrani(int i)
-        {
-            if (i >= 0 && i < stojnice.Length && stojnice[i] != 0)
-            {
-                stojnice[i] = 0;
 
-                SproziOdstranitev("Odstranjena stojnica");
+            SproziPreobremenitev("Ni prostora za več stojnic!");
+        }
+        public void Dodaj()
+        {
+            DodajStojnico(new Stojnica("Privzeta", 3));
+        }
+
+        public void Odstrani(int index)
+        {
+            if (index >= 0 && index < stojnice.Length && stojnice[index] != null)
+            {
+                SproziOdstranitev("Odstranjena stojnica: " + stojnice[index].Naziv);
+                stojnice[index] = null;
                 SproziZapolnitev();
-                PreveriObremenitev(100);
             }
         }
+
         public int SteviloElementov()
         {
-            int c = 0;
+            int count = 0;
             foreach (var s in stojnice)
-                if (s != 0) c++;
-            return c;
+                if (s != null) count++;
+            return count;
         }
         public override int SkupnaObremenitev()
         {
             int vsota = 0;
+
             foreach (var s in stojnice)
-                vsota += s;
+                if (s != null)
+                    vsota += s.Obremenitev;
+
             return vsota;
         }
-
         public override int ObremenitevHale()
         {
             return SkupnaObremenitev();
         }
+
         public override string Opis()
         {
-            return "Sejem";
+            return "Sejem s " + SteviloElementov() + " stojnicami.";
         }
 
         public override string KratekOpis()
         {
-            return "Sejem";
+            return "Sejem: " + SteviloElementov() + " stojnic";
         }
-        public static Sejem operator +(Sejem s, int x)
+        public static Sejem operator +(Sejem s, Stojnica st)
         {
-            s.Dodaj();
+            s.DodajStojnico(st);
             return s;
         }
     }
