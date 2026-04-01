@@ -28,6 +28,7 @@ namespace seminarska
             comboElement.Items.Add("Slika");
             comboElement.Items.Add("InteraktivniEksponat");
             comboElement.Items.Add("Stojnica");
+            comboElement.Items.Add("Avto");
 
             listDogodki.SelectedIndexChanged += listDogodki_SelectedIndexChanged;
         }
@@ -151,11 +152,10 @@ namespace seminarska
                         false);
                 }
                 PoveziEvente(trenutniDogodek);
-
                 sejmisce.DodajDogodek(trenutniDogodek);
-
+                listLog.Items.Clear();
+                txtProgramNaziv.Clear();
                 OsveziDogodke();
-
                 listDogodki.SelectedItem = trenutniDogodek;
         }
 
@@ -205,6 +205,8 @@ namespace seminarska
                     r += new Slika(txtNazivElementa.Text, (int)numPovrsina.Value);
                 else if (tip == "InteraktivniEksponat")
                     r += new InteraktivniEksponat(txtNazivElementa.Text, (int)numPovrsina.Value);
+                else if (tip == "Avto")
+                    r += new Avto(txtNazivElementa.Text, (int)numPovrsina.Value, "BMW");
                 else
                 {
                     MessageBox.Show("Stojnica je samo za sejem!");
@@ -286,5 +288,6 @@ namespace seminarska
             trenutniDogodek.Program.Add(p);
             listProgram.Items.Add(p.ToString());
         }
+
     }
 }

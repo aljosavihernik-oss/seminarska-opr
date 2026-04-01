@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analitika.cs" />
+    <Compile Include="Avto.cs" />
     <Compile Include="Dogodek.cs" />
     <Compile Include="Eksponat.cs" />
     <Compile Include="InteraktivniEksponat.cs" />
